@@ -1,40 +1,32 @@
 {
-  "name": "library",
-  "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+  "name": "@angular-package/component-loader",
+  "version": "0.0.1",
+  "description": "Create dynamic components easier.",
+  "author": "Angular Package <angular-package@wvvw.dev> (https://wvvw.dev)",
+  "homepage": "https://github.com/angular-package/type#readme",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
-  "private": true,
+  "peerDependencies": {
+    "@angular-package/type": "^4.0.5",
+    "@angular/core": "^12.0.1"
+  },
   "dependencies": {
-    "@angular/animations": "~12.0.1",
-    "@angular/common": "~12.0.1",
-    "@angular/compiler": "~12.0.1",
-    "@angular/core": "~12.0.1",
-    "@angular/forms": "~12.0.1",
-    "@angular/platform-browser": "~12.0.1",
-    "@angular/platform-browser-dynamic": "~12.0.1",
-    "@angular/router": "~12.0.1",
-    "rxjs": "~6.6.0",
-    "tslib": "^2.1.0",
-    "zone.js": "~0.11.4"
+    "tslib": "^2.1.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~12.0.1",
-    "@angular/cli": "~12.0.1",
-    "@angular/compiler-cli": "~12.0.1",
-    "@types/jasmine": "~3.6.0",
-    "@types/node": "^12.11.1",
-    "jasmine-core": "~3.7.0",
-    "karma": "~6.3.0",
-    "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage": "~2.0.3",
-    "karma-jasmine": "~4.0.0",
-    "karma-jasmine-html-reporter": "^1.5.0",
-    "ng-packagr": "^12.0.0",
-    "typescript": "~4.2.3"
-  }
+    "@angular-package/type": "^4.0.5",
+    "@angular/core": "^12.0.1",
+    "rxjs": "^6.5.3",
+    "zone.js": "^0.11.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angular-package/component-loader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/angular-package/component-loader/issues"
+  },
+  "license": "MIT"
 }
