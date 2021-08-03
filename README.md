@@ -2,31 +2,33 @@
 
 Useful and simple to use packages based on the [angular.io][angulario].
 
-| Package                              | Description                                                          | Status                                                       |
-| :----------------------------------- | :------------------------------------------------------------------- | -----------------------------------------------------------: |
-| [change-detection][cd-github-readme] | Improve application performance.                                     | [![npm version][cd-npm-badge-svg]][cd-npm-badge]             |
-| [component-loader][cl-github-readme] | Features to support Angular API for loading components dynamically.  | [![npm version][cl-npm-badge-svg]][cl-npm-badge]             |
-| [core][core-github-readme]           | Core features.                                                       | [![npm version][core-npm-badge-svg]][core-npm-badge]         |
-| [prism][prism-github-readme]         | `Prism` highlighter module.                                          | [![npm version][prism-npm-badge-svg]][prism-npm-badge]       |
-| [property][property-github-readme]   | Features to handle object properties.                                | [![npm version][property-npm-badge-svg]][property-npm-badge] |
-| [reactive][reactive-github-readme]   | Automatize process of creating some rxjs features.                   | [![npm version][reactive-npm-badge-svg]][reactive-npm-badge] |
-| [ui][ui-github-readme]               | User interface.                                                      | *In Progress*                                                |
-| [type][type-github-readme]           | Common types, type guards and type checkers.                         | [![npm version][type-npm-badge-svg]][type-npm-badge]         |
-| [testing][testing-github-readme]     | Support for testing other packages.                                  | [![npm version][testing-npm-badge-svg]][testing-npm-badge]   |
+| Package                              | Description                                                         | Status |
+| :----------------------------------- | :------------------------------------------------------------------ | -----: |
+| [callback][callback-github-readme]   | Manages the callback [`function`][js-function].                     | [![npm version][callback-npm-badge-svg]][callback-npm-badge] |
+| [change-detection][cd-github-readme] | Improve application performance.                                    | [![npm version][cd-npm-badge-svg]][cd-npm-badge] |
+| [component-loader][cl-github-readme] | Features to support Angular API for loading components dynamically. | [![npm version][cl-npm-badge-svg]][cl-npm-badge] |
+| [core][core-github-readme]           | Core features.                                                      | [![npm version][core-npm-badge-svg]][core-npm-badge] |
+| [error][error-github-readme]         | Manages an [`Error`][js-error].                                     | [![npm version][error-npm-badge-svg]][error-npm-badge] |
+| [prism][prism-github-readme]         | `Prism` highlighter module.                                         | [![npm version][prism-npm-badge-svg]][prism-npm-badge] |
+| [property][property-github-readme]   | Features to handle object properties.                               | [![npm version][property-npm-badge-svg]][property-npm-badge] |
+| [reactive][reactive-github-readme]   | Automatize process of creating some rxjs features.                  | [![npm version][reactive-npm-badge-svg]][reactive-npm-badge] |
+| [testing][testing-github-readme]     | Support for testing other packages.                                 | [![npm version][testing-npm-badge-svg]][testing-npm-badge] |
+| [type][type-github-readme]           | Common types, type guards and type checkers.                        | [![npm version][type-npm-badge-svg]][type-npm-badge] |
+| [ui][ui-github-readme]               | User interface.                                                     | *In Progress* |
 
 > Click on the package name to visit the package.
 
-## angular-package/core
+## angular-package/component-loader
 
-Core features.
+Features to support Angular API for loading components dynamically.
 
 <!-- npm badge -->
-[![npm version][core-npm-badge-svg]][core-npm-badge]
+[![npm version][cl-npm-badge-svg]][cl-npm-badge]
 <!-- GitHub badges -->
-[![GitHub issues][core-badge-issues]][core-issues]
-[![GitHub forks][core-badge-forks]][core-forks]
-[![GitHub stars][core-badge-stars]][core-stars]
-[![GitHub license][core-badge-license]][core-license]
+[![GitHub issues][cl-badge-issues]][cl-issues]
+[![GitHub forks][cl-badge-forks]][cl-forks]
+[![GitHub stars][cl-badge-stars]][cl-stars]
+[![GitHub license][cl-badge-license]][cl-license]
 <!-- Sponsors badges -->
 [![GitHub sponsors][github-badge-sponsor]][github-sponsor-link]
 [![Support me on Patreon][patreon-badge]][patreon-link]
@@ -39,10 +41,7 @@ Core features.
 * [Skeleton](#skeleton)
 * [Installation](#installation)
 * [Api](#api)
-* Package
-  * [Callback](#callback)
-  * [Component loader](#component-loader)
-  * [Error](#error)
+* [Component loader](#component-loader)
 * [Git](#git)
   * [Commit](#commit)
   * [Versioning](#versioning)
@@ -105,6 +104,9 @@ npm i --save @angular-package/component-loader
 import {
   // Class.
   ComponentLoader,
+
+// Service.
+  ComponentLoaderService,
 } from '@angular-package/component-loader';
 ```
 
@@ -961,24 +963,24 @@ MIT © angular-package ([license][core-license])
 
 <!-- Package: core  -->
   <!-- GitHub: badges -->
-  [core-badge-issues]: https://img.shields.io/github/issues/angular-package/core
-  [core-badge-forks]: https://img.shields.io/github/forks/angular-package/core
-  [core-badge-stars]: https://img.shields.io/github/stars/angular-package/core
-  [core-badge-license]: https://img.shields.io/github/license/angular-package/core
+  [cl-badge-issues]: https://img.shields.io/github/issues/angular-package/component-loader
+  [cl-badge-forks]: https://img.shields.io/github/forks/angular-package/component-loader
+  [cl-badge-stars]: https://img.shields.io/github/stars/angular-package/component-loader
+  [cl-badge-license]: https://img.shields.io/github/license/angular-package/component-loader
   <!-- GitHub: badges links -->
-  [core-issues]: https://github.com/angular-package/core/issues
-  [core-forks]: https://github.com/angular-package/core/network
-  [core-license]: https://github.com/angular-package/core/blob/master/LICENSE
-  [core-stars]: https://github.com/angular-package/core/stargazers
+  [cl-issues]: https://github.com/angular-package/component-loader/issues
+  [cl-forks]: https://github.com/angular-package/component-loader/network
+  [cl-license]: https://github.com/angular-package/component-loader/blob/master/LICENSE
+  [cl-stars]: https://github.com/angular-package/component-loader/stargazers
 
-<!-- Package: core -->
+<!-- Package: callback -->
   <!-- npm -->
-  [core-npm-badge-svg]: https://badge.fury.io/js/%40angular-package%2Fcore.svg
-  [core-npm-badge]: https://badge.fury.io/js/%40angular-package%2Fcore
-  [core-npm-readme]: https://www.npmjs.com/package/@angular-package/core#readme
+  [callback-npm-badge-svg]: https://badge.fury.io/js/%40angular-package%2Fcallback.svg
+  [callback-npm-badge]: https://badge.fury.io/js/%40angular-package%2Fcallback
+  [callback-npm-readme]: https://www.npmjs.com/package/@angular-package/callback#readme
 
   <!-- GitHub -->
-  [core-github-readme]: https://github.com/angular-package/core#readme
+  [callback-github-readme]: https://github.com/angular-package/callback#readme
 
 <!-- Package: change-detection -->
   <!-- npm -->
@@ -989,7 +991,7 @@ MIT © angular-package ([license][core-license])
   <!-- GitHub -->
   [cd-github-readme]: https://github.com/angular-package/change-detection#readme
 
-<!-- Package: change-detection -->
+<!-- Package: component-loader -->
   <!-- npm -->
   [cl-npm-badge-svg]: https://badge.fury.io/js/%40angular-package%2Fcomponent-loader.svg
   [cl-npm-badge]: https://badge.fury.io/js/%40angular-package%2Fcomponent-loader
@@ -997,6 +999,24 @@ MIT © angular-package ([license][core-license])
 
   <!-- GitHub -->
   [cl-github-readme]: https://github.com/angular-package/component-loader#readme
+
+<!-- Package: core -->
+  <!-- npm -->
+  [core-npm-badge-svg]: https://badge.fury.io/js/%40angular-package%2Fcore.svg
+  [core-npm-badge]: https://badge.fury.io/js/%40angular-package%2Fcore
+  [core-npm-readme]: https://www.npmjs.com/package/@angular-package/core#readme
+
+  <!-- GitHub -->
+  [core-github-readme]: https://github.com/angular-package/core#readme
+
+<!-- Package: error -->
+  <!-- npm -->
+  [error-npm-badge-svg]: https://badge.fury.io/js/%40angular-package%2Ferror.svg
+  [error-npm-badge]: https://badge.fury.io/js/%40angular-package%2Ferror
+  [error-npm-readme]: https://www.npmjs.com/package/@angular-package/error#readme
+
+  <!-- GitHub -->
+  [error-github-readme]: https://github.com/angular-package/error#readme
 
 <!-- Package: prism -->
   <!-- npm -->
