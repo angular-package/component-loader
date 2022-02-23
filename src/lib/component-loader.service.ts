@@ -1,19 +1,47 @@
-// external
-import { ComponentFactoryResolver, Inject, Injectable, Component } from '@angular/core';
-
-// internal
+// @angular/core.
+import { Injectable } from '@angular/core';
+// Class.
 import { ComponentLoader } from './component-loader.class';
-
 /**
- * Service to make handle loading dynamic component easier.
- * It is created with https://medium.com/@caroso1222/angular-pro-tip-how-to-dynamically-create-components-in-body-ba200cc289e6.
- * @export
- * @extends {ComponentLoaderService}
- * @template Component Component type to load.
+ * Service to be provided and injected as a dependency to support the creating of a dynamic component.
  */
 @Injectable()
-export class ComponentLoaderService<Component> extends ComponentLoader<Component> {
-  constructor(public factoryResolver: ComponentFactoryResolver) {
-    super(factoryResolver);
+export class ComponentLoaderService<
+  DynamicComponent extends object
+> extends ComponentLoader<DynamicComponent> {
+  /**
+   * Finds the property name that contains an instance of `ComponentLoaderService` in the provided `object`.
+   * @param object An `object` of generic type to find in property key with a `ComponentLoaderService` instance.
+   * @returns The return value is a found property name of the provided `object` that contains an instance of `ComponentLoaderService` or
+   * undefined.
+   * @angularpackage
+   */
+  public static findServiceKey(object: { [k: string]: any }): string | undefined {
+    let serviceKey;
+    Object.keys(object).forEach(
+      (key) =>
+        ComponentLoaderService.isComponentLoaderService(object[key]) &&
+        (serviceKey = key)
+    );
+    return serviceKey;
+  }
+
+  /**
+   * Checks whether the given value is an instance of `ComponentLoaderService`.
+   * @param value The value of any type to test.
+   * @returns The return value is a `boolean` indicating whether the given value is an instance of `ComponentLoaderService`.
+   * @angularpackage
+   */
+  public static isComponentLoaderService<DynamicComponent extends object>(
+    value: any
+  ): value is ComponentLoaderService<DynamicComponent> {
+    return typeof value === 'object' && value instanceof ComponentLoaderService;
+  }
+
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
 }
