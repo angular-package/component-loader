@@ -237,13 +237,13 @@ MIT © angular-package ([license][component-loader-license])
 
 <!-- Package: component-loader -->
   <!-- npm -->
-  [cl-npm-badge-svg]: https://badge.fury.io/js/%40angular-package%2Fcomponent-loader.svg
-  [cl-npm-badge-png]: https://badge.fury.io/js/%40angular-package%2Fcomponent-loader.png
-  [cl-npm-badge]: https://badge.fury.io/js/%40angular-package%2Fcomponent-loader
-  [cl-npm-readme]: https://www.npmjs.com/package/@angular-package/component-loader#readme
+  [component-loader-npm-badge-svg]: https://badge.fury.io/js/%40angular-package%2Fcomponent-loader.svg
+  [component-loader-npm-badge-png]: https://badge.fury.io/js/%40angular-package%2Fcomponent-loader.png
+  [component-loader-npm-badge]: https://badge.fury.io/js/%40angular-package%2Fcomponent-loader
+  [component-loader-npm-readme]: https://www.npmjs.com/package/@angular-package/component-loader#readme
 
   <!-- GitHub -->
-  [cl-github-readme]: https://github.com/angular-package/component-loader#readme
+  [component-loader-github-readme]: https://github.com/angular-package/component-loader#readme
 
 <!-- Package: core -->
   <!-- npm -->
