@@ -1,6 +1,13 @@
 /*
  * Public API Surface of component-loader
  */
+export {
+  // Class.
+  ComponentLoader,
+  ComponentLoaderService,
+} from './lib';
 
-export { ComponentLoader } from './lib/component-loader.class';
-export { ComponentLoaderService } from './lib/component-loader.service';
+export {
+  // Decorator
+  LoadComponent,
+} from './load-component';
