@@ -1,5 +1,5 @@
 // @angular/core
-import { AfterViewInit, OnInit, Type } from '@angular/core';
+import { AfterViewInit, OnInit, Type, Injectable } from '@angular/core';
 // Service.
 import { ComponentLoaderService } from '../../lib/component-loader.service';
 // Interface.
@@ -16,6 +16,7 @@ export function loadComponent<DynamicComponent>(
   target: any,
   config?: LoadComponentConfig<DynamicComponent>
 ): any {
+  @Injectable()
   class LoadComponent extends target implements AfterViewInit, OnInit {
     /**
      * An instance of the `ComponentLoaderService` from the decorator target component.
@@ -27,7 +28,10 @@ export function loadComponent<DynamicComponent>(
      */
     ngOnInit(): void {
       // Sets the `ComponentLoaderService` by using the provided `service` key from the config.
-      if (Object.prototype.hasOwnProperty.call(config, 'service')) {
+      if (
+        typeof config === 'object' &&
+        Object.prototype.hasOwnProperty.call(config, 'service')
+      ) {
         typeof config?.service === 'string' &&
           ComponentLoaderService.isService(this[config.service]) &&
           (this.#service = this[config.service]);
