@@ -7,20 +7,22 @@ import { ComponentLoader } from './component-loader.class';
  */
 @Injectable()
 export class ComponentLoaderService<
-  DynamicComponent extends object
+  DynamicComponent
 > extends ComponentLoader<DynamicComponent> {
   /**
-   * Finds the property name that contains an instance of `ComponentLoaderService` in the provided `object`.
+   * Finds the property name that contains an instance of `ComponentLoaderService` in the given `object`.
    * @param object An `object` of generic type to find in property key with a `ComponentLoaderService` instance.
    * @returns The return value is a found property name of the provided `object` that contains an instance of `ComponentLoaderService` or
    * undefined.
    * @angularpackage
    */
-  public static findServiceKey(object: { [k: string]: any }): string | undefined {
+  public static findServiceKey(object: {
+    [k: string]: any;
+  }): string | undefined {
     let serviceKey;
     Object.keys(object).forEach(
       (key) =>
-        ComponentLoaderService.isComponentLoaderService(object[key]) &&
+        ComponentLoaderService.isService(object[key]) &&
         (serviceKey = key)
     );
     return serviceKey;
@@ -32,16 +34,9 @@ export class ComponentLoaderService<
    * @returns The return value is a `boolean` indicating whether the given value is an instance of `ComponentLoaderService`.
    * @angularpackage
    */
-  public static isComponentLoaderService<DynamicComponent extends object>(
+  public static isService<DynamicComponent>(
     value: any
   ): value is ComponentLoaderService<DynamicComponent> {
     return typeof value === 'object' && value instanceof ComponentLoaderService;
-  }
-
-  /**
-   * Constructor.
-   */
-  constructor() {
-    super();
   }
 }
