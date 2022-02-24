@@ -2,9 +2,6 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/component-loader",
   "lib": {
-    "entryFile": "src/public-api.ts",
-    "umdModuleIds": {
-      "@angular-package/type": "angular-package.type"
-    }
+    "entryFile": "src/public-api.ts"
   }
 }
