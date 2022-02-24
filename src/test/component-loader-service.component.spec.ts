@@ -6,7 +6,7 @@ import { ComponentLoaderServiceComponent } from './module/component-loader-servi
 // Testing.
 import { Testing, TestingToBeMatchers } from '@angular-package/testing';
 
-const testing = new Testing(false, true);
+const testing = new Testing(true, true);
 const toBe = new TestingToBeMatchers();
 
 testing.describe('ComponentLoaderServiceComponent', () => {

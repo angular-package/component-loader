@@ -5,7 +5,7 @@ import { Testing, TestingToBeMatchers } from '@angular-package/testing';
 import { TestModule } from './module/test.module';
 import { LoadComponentDecoratorComponent } from './module/load-component-decorator.component';
 
-const testing = new Testing(false, true);
+const testing = new Testing(true, true);
 const toBe = new TestingToBeMatchers();
 
 testing.describe('LoadComponentDecoratorComponent', () => {
