@@ -8,6 +8,8 @@ export {
 } from './lib';
 
 export {
-  // Decorator
+  // Decorator.
   LoadComponent,
+  // Interface.
+  LoadComponentConfig
 } from './load-component';
