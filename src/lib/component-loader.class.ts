@@ -114,6 +114,8 @@ export abstract class ComponentLoader<DynamicComponent> {
       !this.isComponentCreated() &&
       ((this.#createdComponent = viewContainer.createComponent(componentType)),
       (this.#creationState = this.isComponentCreated()));
+    typeof this.#viewContainer === 'undefined' &&
+      (this.#viewContainer = viewContainer);
     return this;
   }
 
@@ -256,7 +258,7 @@ export abstract class ComponentLoader<DynamicComponent> {
     names.forEach((name) =>
       Object.defineProperty(this.#createdComponent?.instance, name, {
         writable: true,
-        value: undefined,
+        value: this.#createdComponent?.instance[name],
       })
     );
     return this;
