@@ -1,9 +1,8 @@
 import { ComponentRef, ViewContainerRef, Type } from '@angular/core';
-//
 /**
  * Abstract class to handle loading components dynamically.
  */
-export abstract class ComponentLoader<DynamicComponent extends object> {
+export abstract class ComponentLoader<DynamicComponent> {
   //#region public instance accessors.
   /**
    * A read-only component of `ComponentRef` type created by a `createComponent()` method.
@@ -53,7 +52,7 @@ export abstract class ComponentLoader<DynamicComponent extends object> {
   /**
    * Dynamic component to load of generic type variable `DynamicComponent`.
    */
-  #dynamicComponent?: DynamicComponent;
+  #dynamicComponent?: Type<DynamicComponent>;
   //#endregion private instance properties.
 
   /**
@@ -88,8 +87,31 @@ export abstract class ComponentLoader<DynamicComponent extends object> {
    * @param dynamicComponent An optional dynamic component to set with a new child class instance.
    * @angularpackage
    */
-  constructor(dynamicComponent?: DynamicComponent) {
+  constructor(dynamicComponent?: Type<DynamicComponent>) {
     this.#dynamicComponent = dynamicComponent;
+  }
+
+  /**
+   * Assigns the whole object or its properties indicated by the provided `keys` to the dynamic component.
+   * @param object An `object` to assign its properties to the dynamic component.
+   * @param keys A rest parameter of property names from the dynamic component to assign from the provided `obj`.
+   * @returns The return value is an instance of a child class.
+   * @angularpackage
+   */
+  public assignProperties<
+    Obj extends object,
+    Key extends keyof DynamicComponent
+  >(object: Obj, ...keys: Key[]): this {
+    if (Array.isArray(keys) && keys.length > 0) {
+      keys.forEach((key) => {
+        Object.assign(this.instance, {
+          [key]: object[key as string as keyof Obj],
+        });
+      });
+    } else {
+      Object.assign(this.instance, object);
+    }
+    return this;
   }
 
   /**
@@ -133,6 +155,20 @@ export abstract class ComponentLoader<DynamicComponent extends object> {
   }
 
   /**
+   * Gets the value of the property indicated by the provided `key` from the dynamic component.
+   * The method checks the existence of an instance of the dynamic component and its provided `key`.
+   * @param key The `key` of an instance of a `DynamicComponent` to get the property value.
+   * The value is being checked against the proper `key` and its existence in the instance of a dynamic component.
+   * @returns The return value is the value of the indicated property from the instance of a dynamic component.
+   * @angularpackage
+   */
+  public getPropertyValue<Key extends keyof DynamicComponent>(
+    key: Key
+  ): DynamicComponent[Key] | undefined {
+    return this.instance?.[key];
+  }
+
+  /**
    * Checks whether the dynamic component is created by using the method `createComponent()`. The result of the check is stored in the
    * `created` accessor.
    * @returns The return value is a `boolean` indicating whether the dynamic component is already created.
@@ -140,6 +176,43 @@ export abstract class ComponentLoader<DynamicComponent extends object> {
    */
   public isCreated(): boolean {
     return typeof this.#component === 'object';
+  }
+
+  /**
+   * Links the dynamic component property of a specified name to a property of the same name of the given `target` object. It means the
+   * dynamic component property picks the value from the target object property.
+   * @param name Dynamic component property name of a generic type variable `Name` to link with the given target object.
+   * @param target Target object of generic type variable `Target` to link with the dynamic component property of the given `name`.
+   * @returns The return value is an instance of child class.
+   * @angularpackage
+   */
+  public linkProperty<
+    Target extends object,
+    Name extends keyof DynamicComponent
+  >(name: Name, target: Target): this {
+    Object.defineProperty(this.instance, name, {
+      get(): DynamicComponent[Name] {
+        const key = name as any;
+        return target[key as keyof Target] as any;
+      },
+    });
+    return this;
+  }
+
+  /**
+   * The method links the dynamic component properties of specified names to properties of the same names of the given `target` object. It
+   * means the dynamic component properties pick the value from the target object property.
+   * @param names Dynamic component property names of an `Array` of a generic type variable `Name` to link with the given target object.
+   * @param target Target object of generic type variable `Target` to link with the dynamic component properties of the given `names`.
+   * @returns The return value is an instance of child class.
+   * @angularpackage
+   */
+  public linkProperties<
+    Target extends object,
+    Name extends keyof DynamicComponent
+  >(names: Name[], target: Target): this {
+    names.forEach((name) => this.linkProperty(name, target));
+    return this;
   }
 
   /**
@@ -175,9 +248,46 @@ export abstract class ComponentLoader<DynamicComponent extends object> {
    * @angularpackage
    */
   public setDynamicComponent<Component extends DynamicComponent>(
-    component: Component
+    component: Type<Component>
   ): this {
     this.#dynamicComponent = component;
+    return this;
+  }
+
+  /**
+   * Sets the `value` of a property indicated by the provided `key` of an instance of a `DynamicComponent`.
+   * @param key The `key` of a property from the instance of a `DynamicComponent` to set its value.
+   * @param value The `value` of a captured type from the property of `DynamicComponent` instance to set.
+   * @returns The return value is an instance of a child class.
+   * @angularpackage
+   */
+  public setPropertyValue<Key extends keyof DynamicComponent>(
+    key: Key,
+    value: DynamicComponent[Key]
+  ): this {
+    Object.assign(this.instance, {
+      [key]: value,
+    });
+    return this;
+  }
+
+  /**
+   * The method unlinks the dynamic component properties of specified names from the `target` object. It means the dynamic component
+   * property no longer picks the value from the target object property.
+   * @param names A rest parameter of the dynamic component property names of a generic type variable `Name` to unlink from the target
+   * object.
+   * @returns The return value is an instance of child class.
+   * @angularpackage
+   */
+  public unlinkProperties<Name extends keyof DynamicComponent>(
+    ...names: Name[]
+  ): this {
+    names.forEach((name) =>
+      Object.defineProperty(this.instance, name, {
+        writable: true,
+        value: undefined,
+      })
+    );
     return this;
   }
 }
