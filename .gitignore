@@ -126,6 +126,7 @@ build
 dist
 graphics
 fonts
+*.ignore*
 
 # Demos
 demo
