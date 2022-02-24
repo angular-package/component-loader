@@ -9,8 +9,8 @@ export abstract class ComponentLoader<DynamicComponent> {
    * @returns The return value is a component of generic type variable `Dynamic` created by a `ComponentFactory`.
    * @angularpackage
    */
-  public get component(): ComponentRef<DynamicComponent> | undefined {
-    return this.#component;
+  public get createdComponent(): ComponentRef<DynamicComponent> | undefined {
+    return this.#createdComponent;
   }
 
   /**
@@ -18,17 +18,8 @@ export abstract class ComponentLoader<DynamicComponent> {
    * @returns The return value is a `boolean` type indicating whether the dynamic component is created.
    * @angularpackage
    */
-  public get created(): boolean {
-    return this.#created;
-  }
-
-  /**
-   * The `get` accessor returns an instance of the created dynamic component of generic variable type `DynamicComponent`, or `undefined`.
-   * @returns The return value is an instance of `DynamicComponent` if created, otherwise `undefined`.
-   * @angularpackage
-   */
-  public get instance(): DynamicComponent | undefined {
-    return this.#component?.instance;
+  public get creationState(): boolean {
+    return this.#creationState;
   }
   //#endregion public instance accessors.
 
@@ -37,34 +28,32 @@ export abstract class ComponentLoader<DynamicComponent> {
    * A privately stored component created by a `createComponent()` method.
    * "Provides access to the component instance and related objects, and provides the means of destroying the instance."
    */
-  #component?: ComponentRef<DynamicComponent>;
-
-  /**
-   * "Represents a container where one or more views can be attached to a component."
-   */
-  #container!: ViewContainerRef;
+  #createdComponent?: ComponentRef<DynamicComponent>;
 
   /**
    * The creation state of a dynamic component of a `boolean` type.
    */
-  #created = false;
+  #creationState = false;
 
   /**
-   * Dynamic component to load of generic type variable `DynamicComponent`.
+   * "Represents a container where one or more views can be attached to a component."
    */
-  #dynamicComponent?: Type<DynamicComponent>;
+  #viewContainer!: ViewContainerRef;
   //#endregion private instance properties.
 
+  //#region static public methods.
   /**
    * Finds the property name that contains container of `ViewContainerRef` in the given `component`.
    * @param component A component of generic object to look in for the container of `ViewContainerRef`.
    * @returns The return value is the property key of string type that contains `ViewContainerRef` in the given `component` or `undefined`.
    * @angularpackage
    */
-  static findContainerKey(component: { [k: string]: any }): string | undefined {
+  public static findViewContainerKey(component: {
+    [k: string]: any;
+  }): string | undefined {
     let containerKey: string | undefined;
     for (const [index, key] of Object.keys(component).entries()) {
-      if (this.isContainer(component[key])) {
+      if (this.isViewContainer(component[key])) {
         containerKey = key;
         break;
       }
@@ -78,19 +67,12 @@ export abstract class ComponentLoader<DynamicComponent> {
    * @returns The return value is a `boolean` indicating whether the `value` is a container of `ViewContainerRef`.
    * @angularpackage
    */
-  static isContainer(value: any): value is ViewContainerRef {
+  public static isViewContainer(value: any): value is ViewContainerRef {
     return Object.prototype.hasOwnProperty.call(value, '_hostLView');
   }
+  //#endregion static public methods.
 
-  /**
-   * Creates a child class instance with the optional given dynamic component to load.
-   * @param dynamicComponent An optional dynamic component to set with a new child class instance.
-   * @angularpackage
-   */
-  constructor(dynamicComponent?: Type<DynamicComponent>) {
-    this.#dynamicComponent = dynamicComponent;
-  }
-
+  //#region instance public methods.
   /**
    * Assigns the whole object or its properties indicated by the provided `keys` to the dynamic component.
    * @param object An `object` to assign its properties to the dynamic component.
@@ -104,12 +86,12 @@ export abstract class ComponentLoader<DynamicComponent> {
   >(object: Obj, ...keys: Key[]): this {
     if (Array.isArray(keys) && keys.length > 0) {
       keys.forEach((key) => {
-        Object.assign(this.instance, {
+        Object.assign(this.createdComponent?.instance, {
           [key]: object[key as string as keyof Obj],
         });
       });
     } else {
-      Object.assign(this.instance, object);
+      Object.assign(this.createdComponent?.instance, object);
     }
     return this;
   }
@@ -119,19 +101,19 @@ export abstract class ComponentLoader<DynamicComponent> {
    * container. The state of a destroyed component is stored in the property `created`, and its value is set to `false` when the component
    * was successfully destroyed.
    * @param componentType An optional `class` of a `DynamicComponent` type.
-   * @param container A container of `ViewContainerRef` type to load component host view to it. By default, it uses the value set by
+   * @param viewContainer A container of `ViewContainerRef` type to load component host view to it. By default, it uses the value set by
    * `setContainer()` method.
    * @returns The return value is an instance of a child class.
    * @angularpackage
    */
   public createComponent(
-    componentType: Type<DynamicComponent> = this.#dynamicComponent as any,
-    container: ViewContainerRef = this.#container
+    componentType: Type<DynamicComponent>,
+    viewContainer: ViewContainerRef = this.#viewContainer
   ): this {
-    ComponentLoader.isContainer(container) &&
-      !this.isCreated() &&
-      ((this.#component = container.createComponent(componentType)),
-      (this.#created = this.isCreated()));
+    ComponentLoader.isViewContainer(viewContainer) &&
+      !this.isComponentCreated() &&
+      ((this.#createdComponent = viewContainer.createComponent(componentType)),
+      (this.#creationState = this.isComponentCreated()));
     return this;
   }
 
@@ -143,15 +125,15 @@ export abstract class ComponentLoader<DynamicComponent> {
    */
   public destroyComponent(): boolean {
     // Stores the result of destroying the component. Should be `false`.
-    this.isCreated() &&
+    this.isComponentCreated() &&
       // "Destroys the component instance and all of the data structures associated with it."
-      (this.#component?.destroy(),
+      (this.#createdComponent?.destroy(),
       // Sets #component to `undefined`.
-      (this.#component = undefined),
+      (this.#createdComponent = undefined),
       // "Destroys all views in this container."
-      this.#container.clear());
-    this.#created = typeof this.#component === 'undefined';
-    return this.#created;
+      this.#viewContainer.clear());
+    this.#creationState = typeof this.#createdComponent === 'undefined';
+    return this.#creationState;
   }
 
   /**
@@ -165,7 +147,7 @@ export abstract class ComponentLoader<DynamicComponent> {
   public getPropertyValue<Key extends keyof DynamicComponent>(
     key: Key
   ): DynamicComponent[Key] | undefined {
-    return this.instance?.[key];
+    return this.#createdComponent?.instance[key];
   }
 
   /**
@@ -174,29 +156,8 @@ export abstract class ComponentLoader<DynamicComponent> {
    * @returns The return value is a `boolean` indicating whether the dynamic component is already created.
    * @angularpackage
    */
-  public isCreated(): boolean {
-    return typeof this.#component === 'object';
-  }
-
-  /**
-   * Links the dynamic component property of a specified name to a property of the same name of the given `target` object. It means the
-   * dynamic component property picks the value from the target object property.
-   * @param name Dynamic component property name of a generic type variable `Name` to link with the given target object.
-   * @param target Target object of generic type variable `Target` to link with the dynamic component property of the given `name`.
-   * @returns The return value is an instance of child class.
-   * @angularpackage
-   */
-  public linkProperty<
-    Target extends object,
-    Name extends keyof DynamicComponent
-  >(name: Name, target: Target): this {
-    Object.defineProperty(this.instance, name, {
-      get(): DynamicComponent[Name] {
-        const key = name as any;
-        return target[key as keyof Target] as any;
-      },
-    });
-    return this;
+  public isComponentCreated(): boolean {
+    return typeof this.#createdComponent === 'object';
   }
 
   /**
@@ -216,42 +177,38 @@ export abstract class ComponentLoader<DynamicComponent> {
   }
 
   /**
+   * Links the dynamic component property of a specified name to a property of the same name of the given `target` object. It means the
+   * dynamic component property picks the value from the target object property.
+   * @param name Dynamic component property name of a generic type variable `Name` to link with the given target object.
+   * @param target Target object of generic type variable `Target` to link with the dynamic component property of the given `name`.
+   * @returns The return value is an instance of child class.
+   * @angularpackage
+   */
+  public linkProperty<
+    Target extends object,
+    Name extends keyof DynamicComponent
+  >(name: Name, target: Target): this {
+    Object.defineProperty(this.#createdComponent?.instance, name, {
+      get(): DynamicComponent[Name] {
+        const key = name as any;
+        return target[key as keyof Target] as any;
+      },
+    });
+    return this;
+  }
+
+  /**
    * Picks the container of a `ViewContainerRef` from the given `component`.
    * @param component A component of generic object to find container key.
    * @returns The return value is an instance of a child class.
    * @angularpackage
    */
-  public pickContainer(component: { [k: string]: any }): this {
-    const key = ComponentLoader.findContainerKey(component);
+  public pickViewContainer(component: { [k: string]: any }): this {
+    const key = ComponentLoader.findViewContainerKey(component);
     return (
-      typeof key === 'string' && this.setContainer(component[key] as any), this
-    );
-  }
-
-  /**
-   * Sets the given `container` of a `ViewContainerRef` when its property `_hostLView` is found.
-   * @param container "Represents a container where one or more views can be attached to a component."
-   * @returns The return value is an instance of a child class.
-   * @angularpackage
-   */
-  public setContainer(container: ViewContainerRef): this {
-    return (
-      ComponentLoader.isContainer(container) && (this.#container = container),
+      typeof key === 'string' && this.setViewContainer(component[key] as any),
       this
     );
-  }
-
-  /**
-   * The method sets the dynamic component to create with the `createComponent()`.
-   * @param component A component class of the generic type variable `Component` is the dynamic component to create.
-   * @returns The return value is an instance of a child class.
-   * @angularpackage
-   */
-  public setDynamicComponent<Component extends DynamicComponent>(
-    component: Type<Component>
-  ): this {
-    this.#dynamicComponent = component;
-    return this;
   }
 
   /**
@@ -265,10 +222,24 @@ export abstract class ComponentLoader<DynamicComponent> {
     key: Key,
     value: DynamicComponent[Key]
   ): this {
-    Object.assign(this.instance, {
+    Object.assign(this.#createdComponent?.instance, {
       [key]: value,
     });
     return this;
+  }
+
+  /**
+   * Sets the given `container` of a `ViewContainerRef` when its property `_hostLView` is found.
+   * @param container "Represents a container where one or more views can be attached to a component."
+   * @returns The return value is an instance of a child class.
+   * @angularpackage
+   */
+  public setViewContainer(container: ViewContainerRef): this {
+    return (
+      ComponentLoader.isViewContainer(container) &&
+        (this.#viewContainer = container),
+      this
+    );
   }
 
   /**
@@ -283,11 +254,12 @@ export abstract class ComponentLoader<DynamicComponent> {
     ...names: Name[]
   ): this {
     names.forEach((name) =>
-      Object.defineProperty(this.instance, name, {
+      Object.defineProperty(this.#createdComponent?.instance, name, {
         writable: true,
         value: undefined,
       })
     );
     return this;
   }
+  //#endregion instance public methods.
 }
