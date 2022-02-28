@@ -28,7 +28,7 @@ The angular-package supports the development process of [angular][angulario]-bas
 | [testing][testing-github-readme]                        | Support for testing other packages.                               | [![npm version][testing-npm-badge-png]][testing-npm-badge] |
 | [text][text-github-readme]                              | Text on the template with replaceable tags.                       | [![npm version][text-npm-badge-png]][text-npm-badge] |
 | [type][type-github-readme]                              | Common types, type guards, and type checkers.                     | [![npm version][type-npm-badge-png]][type-npm-badge] |
-| [ui][ui-github-readme]                                  | User interface.                                                   | *In Progress* |
+| [ui][ui-github-readme]                                  | Configurable user interface.                                      | [![npm version][ui-npm-badge-png]][ui-npm-badge] |
 | [wrapper][wrapper-github-readme]                        | Wrap the text with the opening and closing chars.                 | [![npm version][wrapper-npm-badge-png]][wrapper-npm-badge] |
 
 Click on the package name to visit its [GitHub](https://github.com/) page.
@@ -385,7 +385,7 @@ MIT © angular-package ([license][component-loader-license])
 <!-- Package: ui -->
   <!-- npm -->
   [ui-npm-badge-svg]: https://badge.fury.io/js/%40angular-package%2Fui.svg
-  [ui-npm-badge-svg]: https://badge.fury.io/js/%40angular-package%2Fui.svg
+  [ui-npm-badge-png]: https://badge.fury.io/js/%40angular-package%2Fui.png
   [ui-npm-badge]: https://badge.fury.io/js/%40angular-package%2Fui
   [ui-npm-readme]: https://www.npmjs.com/package/@angular-package/ui#readme
 

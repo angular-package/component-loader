@@ -1,4 +1,10 @@
-import { ComponentRef, ViewContainerRef, Type } from '@angular/core';
+import {
+  ComponentRef,
+  Injector,
+  NgModuleRef,
+  Type,
+  ViewContainerRef,
+} from '@angular/core';
 /**
  * Abstract class to handle loading components dynamically.
  */
@@ -103,16 +109,31 @@ export abstract class ComponentLoader<DynamicComponent> {
    * @param componentType An optional `class` of a `DynamicComponent` type.
    * @param viewContainer A container of `ViewContainerRef` type to load component host view to it. By default, it uses the value set by
    * `setContainer()` method.
+   * @param options An object that contains extra parameters:
+   *  * index: the index at which to insert the new component's host view into this container.
+   *           If not specified, appends the new view as the last entry.
+   *  * injector: the injector to use as the parent for the new component.
+   *  * ngModuleRef: an NgModuleRef of the component's NgModule, you should almost always provide
+   *                 this to ensure that all expected providers are available for the component
+   *                 instantiation.
+   *  * projectableNodes: list of DOM nodes that should be projected through
+   *                      [`<ng-content>`](api/core/ng-content) of the new component instance.
    * @returns The return value is an instance of a child class.
    * @angularpackage
    */
   public createComponent(
     componentType: Type<DynamicComponent>,
-    viewContainer: ViewContainerRef = this.#viewContainer
+    viewContainer: ViewContainerRef = this.#viewContainer,
+    options?: {
+      index?: number;
+      injector?: Injector;
+      ngModuleRef?: NgModuleRef<unknown>;
+      projectableNodes?: Node[][];
+    }
   ): this {
     ComponentLoader.isViewContainer(viewContainer) &&
       !this.isComponentCreated() &&
-      ((this.#createdComponent = viewContainer.createComponent(componentType)),
+      ((this.#createdComponent = viewContainer.createComponent(componentType, options)),
       (this.#creationState = this.isComponentCreated()));
     typeof this.#viewContainer === 'undefined' &&
       (this.#viewContainer = viewContainer);
