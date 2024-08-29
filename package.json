@@ -2,6 +2,24 @@
   "name": "@angular-package/component-loader",
   "version": "1.0.0-alpha.1",
   "description": "Handles dynamic loading components.",
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://checkout.revolut.com/pay/048b10a3-0e10-42c8-a917-e3e9cb4c8e29"
+    },
+    {
+      "type": "individual",
+      "url": "https://docs.angular-package.dev/donate/cryptocurrency"
+    },
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/angularpackage"
+    },
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/angular-package"
+    }
+  ],
   "author": "angular-package <contact@angular-package.dev> (https://angular-package.dev)",
   "homepage": "https://component-loader.angular-package.dev",
   "publishConfig": {
