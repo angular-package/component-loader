@@ -1,3 +1,4 @@
+import { ChangeDetectorRef } from '@angular/core';
 import {
   ComponentRef,
   Injector,
@@ -10,6 +11,17 @@ import {
  */
 export abstract class ComponentLoader<DynamicComponent> {
   //#region public instance accessors.
+  /**
+   *
+   * @returns
+   * @angularpackage
+   */
+  public get detector(): ChangeDetectorRef | undefined {
+    return typeof this.#changeDetector !== 'undefined'
+      ? this.#createdComponent?.instance[this.#changeDetector]
+      : (undefined as any);
+  }
+
   /**
    * A read-only component of `ComponentRef` type created by a `createComponent()` method.
    * @returns The return value is a component of generic type variable `Dynamic` created by a `ComponentFactory`.
@@ -31,6 +43,11 @@ export abstract class ComponentLoader<DynamicComponent> {
 
   //#region private instance properties.
   /**
+   *
+   */
+  #changeDetector?: keyof DynamicComponent;
+
+  /**
    * A privately stored component created by a `createComponent()` method.
    * "Provides access to the component instance and related objects, and provides the means of destroying the instance."
    */
@@ -48,6 +65,26 @@ export abstract class ComponentLoader<DynamicComponent> {
   //#endregion private instance properties.
 
   //#region static public methods.
+  /**
+   *
+   * @param component
+   * @returns
+   * @angularpackage
+   */
+  public static findChangeDetector<Component>(
+    component: Component
+  ): keyof Component | undefined {
+    let detectorKey: keyof Component | undefined;
+    for (const [index, key] of Object.keys(component).entries()) {
+      if (component[key as keyof Component] instanceof Object) {
+        'detectChanges' in component[key as keyof Component] &&
+          (detectorKey = key as keyof Component);
+        break;
+      }
+    }
+    return detectorKey;
+  }
+
   /**
    * Finds the property name that contains container of `ViewContainerRef` in the given `component`.
    * @param component A component of generic object to look in for the container of `ViewContainerRef`.
@@ -74,7 +111,11 @@ export abstract class ComponentLoader<DynamicComponent> {
    * @angularpackage
    */
   public static isViewContainer(value: any): value is ViewContainerRef {
-    return Object.prototype.hasOwnProperty.call(value, '_hostLView');
+    return (
+      typeof value !== 'undefined' &&
+      value !== null &&
+      Object.prototype.hasOwnProperty.call(value, '_hostLView')
+    );
   }
   //#endregion static public methods.
 
@@ -133,10 +174,17 @@ export abstract class ComponentLoader<DynamicComponent> {
   ): this {
     ComponentLoader.isViewContainer(viewContainer) &&
       !this.isComponentCreated() &&
-      ((this.#createdComponent = viewContainer.createComponent(componentType, options)),
+      ((this.#createdComponent = viewContainer.createComponent(
+        componentType,
+        options
+      )),
       (this.#creationState = this.isComponentCreated()));
     typeof this.#viewContainer === 'undefined' &&
       (this.#viewContainer = viewContainer);
+    typeof this.#createdComponent === 'object' &&
+      (this.#changeDetector = ComponentLoader.findChangeDetector(
+        this.#createdComponent.instance
+      ));
     return this;
   }
 
@@ -174,6 +222,15 @@ export abstract class ComponentLoader<DynamicComponent> {
   }
 
   /**
+   *
+   * @returns
+   * @angularpackage
+   */
+  public getViewContainer(): ViewContainerRef | undefined {
+    return this.#viewContainer;
+  }
+
+  /**
    * Checks whether the dynamic component is created by using the method `createComponent()`. The result of the check is stored in the
    * `created` accessor.
    * @returns The return value is a `boolean` indicating whether the dynamic component is already created.
@@ -200,6 +257,7 @@ export abstract class ComponentLoader<DynamicComponent> {
   }
 
   /**
+   * TODO: store old getter/setter.
    * Links the dynamic component property of a specified name to a property of the same name of the given `target` object. It means the
    * dynamic component property picks the value from the target object property.
    * @param name Dynamic component property name of a generic type variable `Name` to link with the given target object.
@@ -227,7 +285,15 @@ export abstract class ComponentLoader<DynamicComponent> {
    * @angularpackage
    */
   public pickViewContainer(component: { [k: string]: any }): this {
+    // Search for the key.
     const key = ComponentLoader.findViewContainerKey(component);
+    // If key is undefined throw an error to inform.
+    if (typeof key === 'undefined') {
+      throw new Error(
+        `Problem: The \`pickViewContainer()\` method could'nt find \`ViewContainerRef\`. Fix: Check the ViewContainerRef existence in the component.`
+      );
+    }
+    // Else set found key into the instance;
     return (
       typeof key === 'string' && this.setViewContainer(component[key] as any),
       this
