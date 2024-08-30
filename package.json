@@ -27,11 +27,11 @@
     "registry": "https://registry.npmjs.org"
   },
   "peerDependencies": {
-    "@angular/common": "^13.2.3",
-    "@angular/core": "^13.2.3"
+    "@angular/common": "^14.3.0",
+    "@angular/core": "^14.3.0"
   },
   "dependencies": {
-    "tslib": "^2.3.1"
+    "tslib": "^2.7.0"
   },
   "devDependencies": {
     "@angular-package/testing": "^2.0.0-rc",
